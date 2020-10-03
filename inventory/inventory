@@ -1,0 +1,14 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+    pi_2b:
+      ansible_host: 192.168.0.23
+
+home_group:
+  hosts:
+    localhost:
+
+pi_group:
+  hosts:
+    pi_2b:

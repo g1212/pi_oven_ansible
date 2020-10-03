@@ -1,0 +1,39 @@
+---
+- name: Create SSH file so Pi enables SSH from first boot
+  file:
+    path: "{{ rpi_os_mnt_dir }}/one/ssh"
+    state: touch
+
+- name: Copy wifi conig to img file
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: "{{ rpi_os_mnt_dir }}/one/wpa_supplicant.conf"
+    mode: 0644
+
+- name: Change Password for pi user
+  become: yes
+  replace:
+    path: "{{ rpi_os_mnt_dir }}/two/etc/shadow"
+    regexp: ^pi:.*
+    replace: 'pi:{{ rpi_pi_password }}:18494:0:99999:7:::'
+
+- name: Create ssh dir
+  file:
+    path: "{{ rpi_os_mnt_dir }}/two/home/pi/.ssh"
+    state: directory
+
+- name: Add public SSH key
+  copy:
+    src: gh_rpi.pub
+    dest: "{{ rpi_os_mnt_dir }}/two/home/pi/.ssh/authorized_keys"
+    mode: 0644
+
+- name: Secure SSH config
+  blockinfile:
+    path: "{{ rpi_os_mnt_dir }}/two/etc/ssh/sshd_config"
+    block: |
+            ChallengeResponseAuthentication no
+            PasswordAuthentication no
+            UsePAM no
+            PermitRootLogin no
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
