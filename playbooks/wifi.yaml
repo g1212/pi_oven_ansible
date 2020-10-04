@@ -1,0 +1,5 @@
+---
+- hosts: pi_group
+  become: true
+  roles:
+    - role: rpi_proxy

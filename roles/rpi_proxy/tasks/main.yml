@@ -1,0 +1,43 @@
+---
+# tasks file for rpi_proxy
+
+- name: Update cache
+  apt:
+    update_cache: yes
+
+- name: Install dnsmasq
+  apt:
+    name: dnsmasq
+    state: present
+
+- name: Assign eth0 an IP address.
+  blockinfile:
+    path: /etc/dhcpcd.conf
+    block: |
+      interface eth0
+      static ip_address={{ ip_prefix }}.1/24
+    backup: yes
+
+- name: Edit dnsmasq.conf
+  blockinfile:
+    path: /etc/dnsmasq.conf
+    block: |
+      interface=eth0
+      dhcp-range={{ ip_prefix }}.8,{{ ip_prefix }}.250,255.255.255.0,12h
+    backup: yes
+
+- name: Enable packet forwarding for IPv4
+  replace:
+    path:  /etc/sysctl.conf
+    regexp: ^#net\.ipv4\.ip_forward=1
+    replace: 'net.ipv4.ip_forward=1'
+
+- name: Edit /etc/rc.local
+  lineinfile:
+    path: /etc/rc.local
+    line: iptables -t nat -A  POSTROUTING -o wlan0 -j MASQUERADE
+    backup: yes
+    insertbefore: ^exit 0
+
+- name: Reboot Pi
+  reboot:

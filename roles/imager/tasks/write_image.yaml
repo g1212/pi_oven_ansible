@@ -1,0 +1,21 @@
+---
+- name: Unmount image file partition 1
+  mount:
+    path: "{{ rpi_os_mnt_dir }}/one"
+    state: unmounted
+
+- name: Unmount image file partition 2
+  mount:
+    path: "{{ rpi_os_mnt_dir }}/two"
+    state: unmounted
+
+- name: Unmount SD card prior to write
+  mount:
+    path: "{{ rpi_os_write_device }}"
+    state: unmounted
+
+- name: Write image to SD Card
+  shell: |
+          /bin/dd bs=4M conv=fsync \
+          if={{ rpi_os_workspace_dir }}/{{ filename.stdout }} \
+          of={{ rpi_os_write_device }}

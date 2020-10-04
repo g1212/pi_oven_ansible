@@ -1,0 +1,11 @@
+---
+- name: Download Raspberry Pi OS zip
+  get_url:
+    url: "{{ rpi_os_download_url }}"
+    dest: "{{ rpi_os_workspace_dir }}/{{ rpi_os_download_filename }}.zip"
+
+- name: Unzip Pi OS
+  unarchive:
+    copy: no
+    src: "{{ rpi_os_workspace_dir }}/{{ rpi_os_download_filename }}.zip"
+    dest: "{{ rpi_os_workspace_dir }}/"

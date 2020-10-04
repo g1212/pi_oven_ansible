@@ -1,0 +1,50 @@
+---
+- name: Find img filename
+  shell: basename $(find /var/tmp/pi_imager/ -name *.img)
+  register: filename
+
+- name: Get fdisk offset for partition 1 of 2
+  shell: |
+          /sbin/fdisk -lu \
+          {{ rpi_os_workspace_dir }}/{{ filename.stdout }} \
+          | tail -2 | head -n 1 | awk '{print $2}'
+  register: fdisk1_output
+
+- name: Get fdisk offset for partition 2 of 2
+  shell: |
+          /sbin/fdisk -lu \
+          {{ rpi_os_workspace_dir }}/{{ filename.stdout }} \
+          | tail -1 | awk '{print $2}'
+  register: fdisk2_output
+
+- name: Get fdisk blocks for partition 1 of 2
+  shell: |
+          /sbin/fdisk -l \
+          {{ rpi_os_workspace_dir }}/{{ filename.stdout }} \
+          | tail -2 | head -n 1 | awk '{print $4}'
+  register: fdisk1_blocks
+
+
+- name: fdisk1_output
+  debug:
+    msg: "{{ fdisk1_output.stdout }}"
+
+- name: fdisk2_output
+  debug:
+    msg: "{{ fdisk2_output.stdout }}"
+
+- name: Mount image file partition 1
+  mount:
+    path: "{{ rpi_os_mnt_dir }}/one"
+    src: "{{ rpi_os_workspace_dir }}/{{ filename.stdout }}"
+    fstype: vfat
+    state: mounted
+    opts: offset={{ fdisk1_output.stdout | int * 512 }},sizelimit={{ fdisk1_blocks.stdout | int * 512 }}
+
+- name: Mount image file partition 2
+  mount:
+    path: "{{ rpi_os_mnt_dir }}/two"
+    src: "{{ rpi_os_workspace_dir }}/{{ filename.stdout }}"
+    fstype: ext4
+    state: mounted
+    opts: offset={{ fdisk2_output.stdout | int * 512 }}
