@@ -8,3 +8,6 @@ image:
 
 wifi:
 	ansible-playbook -u pi -i inventory/inventory playbooks/wifi.yaml --private-key ${PRIVATE_KEY_PATH}
+
+k3s:
+	ansible-playbook -u pi -i inventory/inventory playbooks/k3s.yaml --private-key ${PRIVATE_KEY_PATH}
