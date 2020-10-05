@@ -3,8 +3,11 @@
 This repo automates configurations for rapberry pi devices, including provisioning pi os images in headless mode, automatically connecting to wifi and configuring ssh from first boot.
 
 So far:
+
     * Pi OS image writer
     * Pi wifi proxy
+    * K3s Installer
+
 The later due to an issue with a laptop, meaning ethernet connection to RPi is needed, for RPi to then handle wifi.
 
 ## Getting Started
@@ -25,3 +28,12 @@ Assuming the pi is fully provisoned, connected to internet and ssh configured.
 1. Change inventory as appropriate, using your pi's IP.
 2. Open the Makefile, and change the `PRIVATE_KEY_PATH` variable as appropriate.
 3. Run `make wifi`
+
+### K3s
+
+Assuming the pi is fully provisoned, connected to internet and ssh configured.
+Also assumed `kubectl` is installed.
+
+1. Change inventory of `pi3_group` as appropriate, using your pi's IP.
+2. Run `make k3s`
+3. Verify success by running `kubectl get pods --all-namespaces` from your local machine.

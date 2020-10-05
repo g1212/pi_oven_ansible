@@ -1,0 +1,9 @@
+---
+- hosts: pi3_group
+  become: yes
+  roles:
+    - role: k3s_pi
+
+- hosts: localhost
+  roles:
+    - role: k3s_local
