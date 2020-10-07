@@ -1,4 +1,5 @@
 ---
+wifi: yes
 rpi_os_download_url: https://downloads.raspberrypi.org/raspios_lite_armhf_latest
 rpi_os_workspace_dir: /var/tmp/pi_imager
 rpi_os_mnt_dir: /tmp/mnt/pi_os_mnt

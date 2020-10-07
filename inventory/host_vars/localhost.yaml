@@ -1,0 +1,7 @@
+---
+static_networking: yes
+static_int: eth0
+static_ip: 192.168.0.5
+static_router: 192.168.0.1
+static_dns: "194.168.4.100 194.168.8.100"
+wifi: no
