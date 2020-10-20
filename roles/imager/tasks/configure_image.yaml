@@ -4,11 +4,23 @@
     path: "{{ rpi_os_mnt_dir }}/one/ssh"
     state: touch
 
+- name: Add static IP config to img file
+  blockinfile:
+    path: "{{ rpi_os_mnt_dir }}/two/etc/dhcpcd.conf"
+    block: |
+            interface {{ static_int }}
+            static ip_address={{ static_ip }}/24
+            static routers={{ static_router }}
+            static domain_name_servers={{ static_dns }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+  when: static_networking
+
 - name: Copy wifi conig to img file
   template:
     src: wpa_supplicant.conf.j2
     dest: "{{ rpi_os_mnt_dir }}/one/wpa_supplicant.conf"
     mode: 0644
+  when: wifi and static_int != eth0
 
 - name: Change Password for pi user
   become: yes

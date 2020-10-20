@@ -1,0 +1,11 @@
+---
+hostNetwork: "true"
+privileged: "true"
+webHttp: "55080"
+webHttps: "55443"
+serviceTCP:
+  type: ClusterIP
+  loadBalancerIP: ""
+serviceUDP:
+  type: ClusterIP
+  loadBalancerIP: ""

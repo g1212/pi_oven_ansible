@@ -1,0 +1,36 @@
+serviceTCP:
+  type: LoadBalancer
+  loadBalancerIP: "192.168.0.5"
+serviceUDP:
+  type: LoadBalancer
+  loadBalancerIP: "192.168.0.5"
+
+virtualHost: pihole.192.168.0.5.nip.io
+
+ingress:
+  enabled: 
+  path: /
+  hosts:
+    - pihole.192.168.0.5.nip.io
+
+resources:
+  limits:
+   cpu: 200m
+   memory: 256Mi
+  requests:
+   cpu: 100m
+   memory: 128Mi
+
+persistentVolumeClaim:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: "250Mi"
+
+admin:
+  existingSecret: "pihole-secret"
+  passwordKey: "password"
+
+extraEnvVars:
+  TZ: "Europe/London" # Timezone
+  ServerIP: 192.168.0.5
