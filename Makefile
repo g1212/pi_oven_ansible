@@ -39,3 +39,22 @@ pihole-admin:
 	kubectl create secret generic pihole-secret \
     	--from-literal password=${PASSWORD} \
     	--namespace pihole
+
+.PHONY: k8s-dashboard
+.ONESHELL:
+k8s-dashboard:
+	GITHUB_URL=https://github.com/kubernetes/dashboard/releases
+	VERSION_KUBE_DASHBOARD=$$(curl -w '%{url_effective}' -I -L -s -S $${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
+	kubectl apply \
+		-f https://raw.githubusercontent.com/kubernetes/dashboard/$${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
+	kubectl apply \
+		-f k8s-dashboard/dashboard.admin-user.yml \
+		-f k8s-dashboard/dashboard.admin-user-role.yml
+
+	./k8s-dashboard/check-pod.sh
+	kubectl -n kubernetes-dashboard \
+		describe secret \
+		admin-user-token |\
+		grep ^token
+
+	echo "\nRun 'kube proxy' then go to the following URL:\nhttp://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default"
