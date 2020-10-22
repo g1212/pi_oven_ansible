@@ -60,3 +60,15 @@ k8s-dashboard:
 		grep ^token
 
 	echo "\nRun 'kube proxy' then go to the following URL:\nhttp://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default"
+
+.PHONY: monitoring
+.ONESHELL:
+monitoring:
+	git clone git@github.com:carlosedp/cluster-monitoring.git
+	cp monitoring/vars.jsonnet cluster-monitoring/vars.jsonnet
+	cd cluster-monitoring
+	make vendor
+	make
+	make deploy
+	cd -
+	rm -rf cluster-monitoring
