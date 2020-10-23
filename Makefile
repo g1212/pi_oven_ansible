@@ -9,14 +9,16 @@ image:
 wifi:
 	ansible-playbook -u pi -i inventory/inventory playbooks/wifi.yaml --private-key ${PRIVATE_KEY_PATH}
 
+.PHONY: k3s-ansible
 k3s-ansible:
-	echo "Ensure you have pulled down k3s-ansible repo"
-	ansible-playbook -u pi -i ../k3s-ansible/inventory/sample/hosts.ini ../k3s-ansible/site.yml --private-key ${PRIVATE_KEY_PATH}
+	git clone git@github.com:rancher/k3s-ansible.git k3s-tmp
+	ansible-playbook -u pi -i k3s-ansible/inventory/sample/hosts.ini k3s-tmp/site.yml --private-key ${PRIVATE_KEY_PATH}
 	scp pi3:~/.kube/config ~/.kube/config_temp
 	sed -i -e "s/default/pik3s/g" ~/.kube/config_temp
 	cat ~/.kube/config_temp >> ~/.kube/config
 	rm ~/.kube/config_temp
 	chmod 0600 ~/.kube/config
+	rm -rf k3s-tmp
 
 namespaces:
 	kubectl create namespace monitoring
