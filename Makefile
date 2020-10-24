@@ -23,6 +23,7 @@ k3s-ansible:
 namespaces:
 	kubectl create namespace monitoring
 	kubectl create namespace pihole
+	kubectl create namespace cert-manager
 
 .PHONY: pihole
 pihole:
@@ -59,4 +60,27 @@ k8s-dashboard:
 		admin-user-token |\
 		grep ^token
 
-	echo "\nRun 'kube proxy' then go to the following URL:\nhttp://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default"
+	echo "\nRun 'kube proxy' then go to the following URL:\nhttp://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default
+
+nginx:
+	helm repo add nginx-stable https://helm.nginx.com/stable
+	helm repo update
+	helm upgrade -i \
+		nginx-ingress \
+		nginx-stable/nginx-ingress \
+		--namespace kube-system \
+		--values nginx-ingress/values.yaml
+
+.PHONY: cert-manager
+cert-manager:
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update
+	helm upgrade -i \
+		cert-manager jetstack/cert-manager \
+  		--namespace cert-manager \
+  		--version v1.0.3 \
+  		--set installCRDs=true
+	sleep 30s
+	kubectl apply \
+		-f cert-manager/letsencrypt-staging.yml \
+		-f cert-manager/letsencrypt-prod.yml
