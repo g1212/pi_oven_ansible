@@ -6,13 +6,13 @@ image:
 	@sudo ls > /dev/null
 	ansible-playbook \
 		--user ${USERNAME} \
-		--inventory inventory/inventory \
+		--inventory inventory/hosts.yaml \
 		playbooks/imager.yaml
 
 wifi:
 	ansible-playbook \
 		--user pi \
-		--inventory inventory/inventory \
+		--inventory inventory/hosts.yaml \
 		--private-key ${PRIVATE_KEY_PATH} \
 		playbooks/wifi.yaml
 
@@ -25,7 +25,7 @@ k3s-ansible:
 
 	ansible-playbook \
 		--user pi \
-		--inventory k3s-ansible/inventory/pi/hosts.ini \
+		--inventory k3s-ansible/hosts.ini \
 		--private-key ${PRIVATE_KEY_PATH} \
 		k3s-tmp/site.yml
 

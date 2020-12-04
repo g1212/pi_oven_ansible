@@ -35,6 +35,6 @@ Assuming the pi is fully provisoned, connected to internet and ssh configured.
 Assuming the pi is fully provisoned, connected to internet and ssh configured.
 Also assumed `kubectl` is installed.
 
-1. Change inventory in `k3s-ansible/inventory/sample/hosts.ini` as appropriate, using your pi's IP.
+1. Change inventory in `k3s-ansible/hosts.ini` as appropriate, using your pi's IP.
 2. Run `make k3s-ansible`
 3. Verify success by running `kubectl get pods --all-namespaces` from your local machine.
