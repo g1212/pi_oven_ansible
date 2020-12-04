@@ -33,6 +33,16 @@ pihole:
 		mojo2600/pihole \
 		--namespace pihole \
 		--version 1.7.17 \
+		--values helm/pihole/values.yaml
+
+pihole-dhcp:
+	helm repo add mojo2600 https://mojo2600.github.io/pihole-kubernetes/
+	helm repo update
+	helm upgrade -i \
+		pihole \
+		mojo2600/pihole \
+		--namespace pihole \
+		--version 1.7.17 \
 		--values helm/pihole/values.yaml \
 		--values helm/pihole/dhcp.yaml
 
