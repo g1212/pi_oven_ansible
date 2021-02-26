@@ -1,0 +1,5 @@
+---
+- hosts: pi0_group
+  become: true
+  roles:
+    - role: kodi

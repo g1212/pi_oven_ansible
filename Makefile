@@ -38,3 +38,10 @@ k3s-ansible:
 	rm ~/.kube/config_temp
 	chmod 0600 ~/.kube/config
 	rm -rf k3s-tmp
+
+kodi:
+	ansible-playbook \
+		--user pi \
+		--inventory inventory/hosts.yaml \
+		--private-key ${PRIVATE_KEY_PATH} \
+		playbooks/kodi.yaml
