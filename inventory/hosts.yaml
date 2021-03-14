@@ -2,6 +2,8 @@ all:
   hosts:
     localhost:
       ansible_connection: local
+    pi_0:
+      ansible_host: 192.168.1.2
     pi_2b:
       ansible_host: 192.168.0.23
     pi_3b:
@@ -10,6 +12,10 @@ all:
 home_group:
   hosts:
     localhost:
+
+pi0_group:
+  hosts:
+    pi_0:
 
 pi2_group:
   hosts:
@@ -23,3 +29,4 @@ pi_group:
   children:
     pi2_group:
     pi3_group:
+    pi0_group:

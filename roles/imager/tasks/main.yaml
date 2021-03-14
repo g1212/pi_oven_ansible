@@ -1,4 +1,8 @@
 ---
+- name: include vars for the specific pi model
+  include_vars:
+    file: "{{ rpi_model }}.yaml"
+
 - name: Clear workspace and mount dirs
   file:
     path: "{{ item }}"

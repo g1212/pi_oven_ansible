@@ -1,0 +1,24 @@
+---
+- name: Update cache and upgrade
+  apt:
+    update_cache: yes
+    upgrade: 'yes'
+
+- name: Install kodi
+  apt:
+    name: kodi
+    state: present
+
+- name: Copy service file to remote
+  copy:
+    src: kodi.service
+    dest: /lib/systemd/system/kodi.service
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Enable kodi service
+  ansible.builtin.systemd:
+    name: kodi
+    state: started
+    enabled: yes

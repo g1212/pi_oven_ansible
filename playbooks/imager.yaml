@@ -1,5 +1,5 @@
 ---
-- hosts: home_group
+- hosts: localhost
   become: true
   roles:
     - role: imager

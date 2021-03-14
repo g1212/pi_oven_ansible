@@ -20,7 +20,7 @@
     src: wpa_supplicant.conf.j2
     dest: "{{ rpi_os_mnt_dir }}/one/wpa_supplicant.conf"
     mode: 0644
-  when: wifi and static_int != eth0
+  when: wifi and static_int != 'eth0'
 
 - name: Change Password for pi user
   become: yes
